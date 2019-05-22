@@ -11,7 +11,7 @@ import (
 var (
 	currentname = "init"
 	currenturl  = "https://yeah.moe/"
-	rwlock sync.RWMutex
+	rwlock      sync.RWMutex
 )
 
 const urlprefix = "https://yeah.moe/"
@@ -41,9 +41,9 @@ func push(c echo.Context) error {
 	}
 
 	rwlock.Lock()
+	defer rwlock.Unlock()
 	currenturl = url
 	currentname = name
-	rwlock.Unlock()
 
 	return c.String(http.StatusOK, "ok")
 }

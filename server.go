@@ -42,8 +42,10 @@ func push(c echo.Context) error {
 
 	rwlock.Lock()
 	defer rwlock.Unlock()
+	if url != currenturl {
+		currentname = name
+	}
 	currenturl = url
-	currentname = name
 
 	return c.String(http.StatusOK, "ok")
 }

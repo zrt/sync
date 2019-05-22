@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"strings"
+	"sync"
 
 	"github.com/labstack/echo"
 )
@@ -10,6 +11,7 @@ import (
 var (
 	currentname = "init"
 	currenturl  = "https://yeah.moe/"
+	rwlock      sync.RWMutex
 )
 
 const urlprefix = "https://yeah.moe/"
@@ -20,8 +22,11 @@ type Response struct {
 }
 
 func pull(c echo.Context) error {
+	rwlock.RLock()
+	defer rwlock.RUnlock()
 	return c.JSON(http.StatusOK, &Response{currentname, currenturl})
 }
+
 func push(c echo.Context) error {
 	url := c.FormValue("url")
 	name := c.FormValue("name")
@@ -35,6 +40,8 @@ func push(c echo.Context) error {
 		name = "Guest"
 	}
 
+	rwlock.Lock()
+	defer rwlock.Unlock()
 	currenturl = url
 	currentname = name
 

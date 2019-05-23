@@ -15,6 +15,7 @@ var (
 )
 
 const urlprefix = "https://yeah.moe/"
+const coinsprefix = "https://yeah.moe/coins/"
 
 type Response struct {
 	Name string `json:"name"`
@@ -34,6 +35,9 @@ func push(c echo.Context) error {
 		return c.String(http.StatusOK, "miss url")
 	}
 	if !strings.HasPrefix(url, urlprefix) {
+		return c.String(http.StatusOK, "invalid url")
+	}
+	if strings.HasPrefix(url, coinsprefix) {
 		return c.String(http.StatusOK, "invalid url")
 	}
 	if name == "" {
